@@ -935,7 +935,6 @@ qpnp_chg_is_batfet_closed(struct qpnp_chg_chip *chip)
 	return (batfet_closed_rt_sts & BAT_FET_ON_IRQ) ? 1 : 0;
 }
 
-#define USB_VALID_BIT	BIT(7)
 static int
 qpnp_chg_is_usb_chg_plugged_in(struct qpnp_chg_chip *chip)
 {
@@ -943,11 +942,11 @@ qpnp_chg_is_usb_chg_plugged_in(struct qpnp_chg_chip *chip)
 	int rc;
 
 	rc = qpnp_chg_read(chip, &usb_chgpth_rt_sts,
-				 chip->usb_chgpth_base + CHGR_STATUS, 1);
+				 INT_RT_STS(chip->usb_chgpth_base), 1);
 
 	if (rc) {
 		pr_err("spmi read failed: addr=%03X, rc=%d\n",
-				chip->usb_chgpth_base + CHGR_STATUS, rc);
+				INT_RT_STS(chip->usb_chgpth_base), rc);
 		return rc;
 	}
 	pr_debug("chgr usb sts 0x%x\n", usb_chgpth_rt_sts);
@@ -959,7 +958,7 @@ qpnp_chg_is_usb_chg_plugged_in(struct qpnp_chg_chip *chip)
 #endif
 /* OPPO 2014-03-11 sjc Modify end */
 
-	return (usb_chgpth_rt_sts & USB_VALID_BIT) ? 1 : 0;
+	return (usb_chgpth_rt_sts & USBIN_VALID_IRQ) ? 1 : 0;
 }
 
 static bool
