@@ -1153,6 +1153,10 @@ static int mdss_fb_unblank_sub(struct msm_fb_data_type *mfd)
 	if (!mfd)
 		return -EINVAL;
 
+#ifdef CONFIG_MACH_MSM8974_14001
+	fb_unblank_bl = FB_UNBLANK_DELAY_BL_TWO_FRAMES;
+#endif
+
 	/* Start Display thread */
 	if (mfd->disp_thread == NULL) {
 		ret = mdss_fb_start_disp_thread(mfd);
